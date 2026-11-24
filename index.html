@@ -1,126 +1,278 @@
 <!doctype html>
-<html lang="en" data-lang="en" data-theme="light">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Anonymous audio demo for review: cross-dialect voice cloning across 7 Chinese dialects and 6 systems.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="DSI-CDTTS · Cross-Dialect Voice Cloning Demo">
-<meta property="og:description" content="Anonymous audio demo: seven Chinese dialects × six systems, one case per dialect.">
-<meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f1013" media="(prefers-color-scheme: dark)">
-<title>DSI-CDTTS · Cross-Dialect Voice Cloning Demo</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b23a26'/%3E%3Cg stroke='%23fff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M8 16h1'/%3E%3Cpath d='M12 11v10'/%3E%3Cpath d='M16 7v18'/%3E%3Cpath d='M20 12v8'/%3E%3Cpath d='M24 15h1'/%3E%3C/g%3E%3C/svg%3E">
-<script>
-  (function () {
-    var root = document.documentElement;
-    var theme = null, lang = null;
-    try {
-      theme = localStorage.getItem("cdd-theme");
-      lang = localStorage.getItem("cdd-lang");
-    } catch (e) {}
-    if (theme !== "light" && theme !== "dark") {
-      theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-    }
-    if (lang !== "en" && lang !== "zh") {
-      lang = /^zh/i.test(navigator.language || "") ? "zh" : "en";
-    }
-    root.setAttribute("data-theme", theme);
-    root.setAttribute("data-lang", lang);
-    root.setAttribute("lang", lang === "zh" ? "zh-CN" : "en");
-  })();
-</script>
+<meta name="description" content="跨方言语音克隆试听 Demo：7 个汉语方言 × 6 个系统。">
+<title>DSI-CDTTS · 跨方言语音克隆 Demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg stroke='%23111' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M8 16h1.5'/%3E%3Cpath d='M13 11v10'/%3E%3Cpath d='M18 8v16'/%3E%3Cpath d='M23 13v6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<a class="skip-link" href="#demo" data-i18n="skip">Skip to demo</a>
-
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="#top" aria-label="DSI-CDTTS, back to top">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-        <g stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-          <path d="M5 16h1.5"/><path d="M10 10.5v11"/><path d="M15 6.5v19"/>
-          <path d="M20 11.5v9"/><path d="M25 14.5h1.5"/>
-        </g>
-      </svg>
-      <span class="brand-name">DSI-CDTTS</span>
-      <span class="brand-sub" data-i18n="brandSub">Audio Demo</span>
-    </a>
-
-    <nav class="case-nav" aria-label="Dialect cases" data-i18n-aria="navAria">
-      <div class="case-nav-track" id="case-nav-track"></div>
-    </nav>
-
-    <div class="controls">
-      <button class="chip-btn" id="lang-toggle" type="button" aria-label="Switch language">中文</button>
-      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle theme">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g stroke-linecap="round"><path d="M12 2.6v2.2"/><path d="M12 19.2v2.2"/><path d="M2.6 12h2.2"/><path d="M19.2 12h2.2"/><path d="M5.4 5.4l1.6 1.6"/><path d="M17 17l1.6 1.6"/><path d="M18.6 5.4L17 7"/><path d="M7 17l-1.6 1.6"/></g></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.4 8.4 0 1 0 10.7 10.7z"/></svg>
-      </button>
-    </div>
-  </div>
+<header>
+  <h1>DSI-CDTTS · 跨方言语音克隆 Demo</h1>
+  <p class="sub">7 个汉语方言 × 6 个系统 · 参考音色 + 目标文本 → 目标方言语音</p>
+  <nav aria-label="方言">
+    <a href="#01_yue_s22">粤语</a>
+    <a href="#02_wu_s06">吴语</a>
+    <a href="#03_sichuan_s19">四川话</a>
+    <a href="#04_dongbei_s12">东北话</a>
+    <a href="#05_shaanxi_s30">陕西话</a>
+    <a href="#06_henan_s21">河南话</a>
+    <a href="#07_minnan_s29">闽南话</a>
+  </nav>
 </header>
 
-<main id="top">
-  <section class="hero">
-    <p class="eyebrow" data-i18n="eyebrow">Anonymous submission · Audio demo</p>
-    <h1>
-      <span data-i18n="h1a">Cross-Dialect Voice Cloning</span><br>
-      <em class="accent" data-i18n="h1b">Demo</em>
-    </h1>
-    <p class="lede" data-i18n="lede">A reference recording in one Chinese dialect, a target sentence in another. The task: keep the speaker and switch to the target dialect. Seven dialects, six systems, one clip per system — listen and judge for yourself.</p>
-
-    <div class="task">
-      <div class="task-node">
-        <span class="task-kicker" data-i18n="taskRefKicker">Reference voice</span>
-        <span class="task-main" data-i18n="taskRefMain">Source dialect speech</span>
-        <span class="task-sub" data-i18n="taskRefSub">keep this speaker</span>
-      </div>
-      <span class="task-op" aria-hidden="true">+</span>
-      <div class="task-node">
-        <span class="task-kicker" data-i18n="taskTextKicker">Target text</span>
-        <span class="task-main" data-i18n="taskTextMain">Different dialect</span>
-        <span class="task-sub" data-i18n="taskTextSub">switch to the target dialect</span>
-      </div>
-      <span class="task-op task-op--arrow" aria-hidden="true">→</span>
-      <div class="task-node task-node--out">
-        <span class="task-kicker" data-i18n="taskOutKicker">Generated speech</span>
-        <span class="task-main" data-i18n="taskOutMain">Target dialect, same voice</span>
-        <span class="task-sub" data-i18n="taskOutSub">7 dialects × 6 systems</span>
-      </div>
+<main>
+  <section id="01_yue_s22">
+    <h2>粤语 <span class="meta">吴语 → 粤语 · 样本 22</span></h2>
+    <p class="text" lang="zh">各位男士、各位女士、各位同學。咁而家啲人就講男士們、女士們。同学们咁，咁做一个字又好流行啊！就系个让字，</p>
+    <div class="audio-row">
+      <span class="label">参考 · 吴语</span>
+      <audio controls preload="none" src="cases/01_yue_s22/ref.mp3"></audio>
     </div>
-
-    <dl class="stats">
-      <div><dt data-i18n="statDialects">Dialects</dt><dd>07</dd></div>
-      <div><dt data-i18n="statSystems">Systems</dt><dd>06</dd></div>
-      <div><dt data-i18n="statClips">Audio clips</dt><dd>49</dd></div>
-    </dl>
-
-    <p class="hint" data-i18n-html="hintHtml">Headphones recommended · <kbd>Space</kbd> play / pause · <kbd>←</kbd> <kbd>→</kbd> seek 5 s · <kbd>Esc</kbd> stop</p>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/01_yue_s22/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/01_yue_s22/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/01_yue_s22/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/01_yue_s22/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/01_yue_s22/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/01_yue_s22/06_voxcpm2_base.mp3"></audio>
+    </div>
   </section>
 
-  <section id="demo" class="cases" aria-labelledby="demo-heading" tabindex="-1">
-    <h2 id="demo-heading" class="visually-hidden" data-i18n="demoHeading">Listen to the demos</h2>
-    <noscript><p class="noscript">This demo needs JavaScript to build the audio players. Enable JavaScript, or see README.md.<br>
-    本页面需要 JavaScript 生成播放器，请启用 JavaScript，或参见 README.md。</p></noscript>
+  <section id="02_wu_s06">
+    <h2>吴语 <span class="meta">河南话 → 吴语 · 样本 06</span></h2>
+    <p class="text" lang="zh">嗯，呃，讲完搿只故事呢，葛末我再来讲讲上海个，</p>
+    <div class="audio-row">
+      <span class="label">参考 · 河南话</span>
+      <audio controls preload="none" src="cases/02_wu_s06/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/02_wu_s06/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/02_wu_s06/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/02_wu_s06/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/02_wu_s06/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/02_wu_s06/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/02_wu_s06/06_voxcpm2_base.mp3"></audio>
+    </div>
   </section>
+
+  <section id="03_sichuan_s19">
+    <h2>四川话 <span class="meta">吴语 → 四川话 · 样本 19</span></h2>
+    <p class="text" lang="zh">伴手呃伴手礼嘛，给自己的家人带回去，好好品尝一下。</p>
+    <div class="audio-row">
+      <span class="label">参考 · 吴语</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/03_sichuan_s19/06_voxcpm2_base.mp3"></audio>
+    </div>
+  </section>
+
+  <section id="04_dongbei_s12">
+    <h2>东北话 <span class="meta">粤语 → 东北话 · 样本 12</span></h2>
+    <p class="text" lang="zh">这样式儿呢，反复的做呢，最后我终于的呢，把饭菜什么呢。都做好了，</p>
+    <div class="audio-row">
+      <span class="label">参考 · 粤语</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/04_dongbei_s12/06_voxcpm2_base.mp3"></audio>
+    </div>
+  </section>
+
+  <section id="05_shaanxi_s30">
+    <h2>陕西话 <span class="meta">四川话 → 陕西话 · 样本 30</span></h2>
+    <p class="text" lang="zh">呃磨面的那上午俺婆说你去给咱带预先换些面去</p>
+    <div class="audio-row">
+      <span class="label">参考 · 四川话</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/05_shaanxi_s30/06_voxcpm2_base.mp3"></audio>
+    </div>
+  </section>
+
+  <section id="06_henan_s21">
+    <h2>河南话 <span class="meta">陕西话 → 河南话 · 样本 21</span></h2>
+    <p class="text" lang="zh">俺妞是一一年结的婚，也盖成房，也倒穷。不是人也欠债一百多万，这边借钱也不中。这样有有也加入小贷嘛？去他舅家又借了</p>
+    <div class="audio-row">
+      <span class="label">参考 · 陕西话</span>
+      <audio controls preload="none" src="cases/06_henan_s21/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/06_henan_s21/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/06_henan_s21/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/06_henan_s21/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/06_henan_s21/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/06_henan_s21/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/06_henan_s21/06_voxcpm2_base.mp3"></audio>
+    </div>
+  </section>
+
+  <section id="07_minnan_s29">
+    <h2>闽南话 <span class="meta">粤语 → 闽南话 · 样本 29</span></h2>
+    <p class="text" lang="zh">上介迄落，就是讲啊，生活咱食吼较简单，吼啊尽量会当爱去食比方敢若较环保诶物件，</p>
+    <div class="audio-row">
+      <span class="label">参考 · 粤语</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/ref.mp3"></audio>
+    </div>
+    <div class="audio-row ours">
+      <span class="label">本文 Ours</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/01_main.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">M2D-only</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/02_m2d.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">D2D + 克隆参考</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/03_cv3_1ref_10k.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">CosyVoice3</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/04_cosyvoice3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">FireRedTTS3</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/05_fireredtts3.mp3"></audio>
+    </div>
+    <div class="audio-row">
+      <span class="label">VoxCPM2 base</span>
+      <audio controls preload="none" src="cases/07_minnan_s29/06_voxcpm2_base.mp3"></audio>
+    </div>
+  </section>
+
 </main>
 
-<footer class="site-footer">
-    <div class="footer-inner">
-      <p class="footer-title" data-i18n="footerTitle">Anonymous submission · For review only</p>
-      <p data-i18n="footerData">Seven Chinese dialects × six systems: 42 generated clips plus 7 reference recordings. Generated audio was exported to MP3 (48 kHz mono) without loudness normalisation or other post-processing; references are 16 kHz.</p>
-      <p data-i18n="footerNoMetrics">This page deliberately shows no objective or subjective scores; all metrics are reported in the paper.</p>
-      <p data-i18n="footerOffline">Everything here is self-contained: no external fonts, scripts or analytics. The page also works offline from a local copy.</p>
-      <p class="footer-meta" id="footer-meta">Static HTML · CSS · JS · 49 audio clips · no trackers</p>
-    </div>
-  </footer>
+<footer>
+  <p>匿名投稿，仅供评审 · Anonymous submission for review</p>
+</footer>
 
-<script src="assets/peaks.js"></script>
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
+<script>
+(function () {
+  var players = [].slice.call(document.querySelectorAll("audio"));
+  players.forEach(function (player) {
+    player.addEventListener("play", function () {
+      players.forEach(function (other) {
+        if (other !== player) other.pause();
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
