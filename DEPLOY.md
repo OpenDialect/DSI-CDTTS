@@ -11,6 +11,37 @@ authors. The live site is <https://opendialect.github.io/DSI-CDTTS/>.
   `.github/workflows/sync-gh-pages.yml`, so `git push origin main` is the only
   deploy step.
 
+## What URL will the site get?
+
+GitHub Pages URLs follow the **account username** and the **repository name**:
+
+| Setup | URL |
+|---|---|
+| account `NAME`, repo `demo` | `https://name.github.io/demo/` |
+| account `NAME`, repo `NAME.github.io` | `https://name.github.io/` |
+
+Two things are easy to confuse:
+
+- The account **display name** (Profile → Name) does **not** affect the URL.
+  Only the **username** does (Settings → Account → Change username).
+- A repository named `DSI-CDTTS` gives a *project* site at
+  `https://dsi-cdtts.github.io/DSI-CDTTS/`. Only a repository named exactly
+  `DSI-CDTTS.github.io` is published at the root, `https://dsi-cdtts.github.io/`.
+
+To publish the demo at the root URL:
+
+1. Change the account username to `DSI-CDTTS`
+   (Settings → Account → Change username).
+2. Rename the repository to `DSI-CDTTS.github.io`
+   (Settings → General → Repository name).
+3. In Settings → Pages set **Source: Deploy from a branch**, branch `main`,
+   folder `/ (root)`; wait a minute, then open `https://dsi-cdtts.github.io/`.
+4. Update the git remote afterwards:
+   `git remote set-url origin git@github.com:DSI-CDTTS/DSI-CDTTS.github.io.git`
+
+The project URL `https://dsi-cdtts.github.io/DSI-CDTTS/` continues to work if
+only the username is changed (the repository keeps its name).
+
 ## Re-creating the setup from scratch
 
 1. **Throw-away GitHub account.** Neutral username, no name/bio/avatar,

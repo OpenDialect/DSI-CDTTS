@@ -29,9 +29,9 @@ DIALECTS = {
 }
 
 MODELS = [
-    ("main", "本文 Ours"),
+    ("main", "Ours"),
     ("m2d", "M2D-only"),
-    ("cv3", "D2D + 克隆参考"),
+    ("cv3", "D2D + cloned refs"),
     ("cosy", "CosyVoice3"),
     ("firered", "FireRedTTS3"),
     ("vox", "VoxCPM2 base"),
@@ -47,21 +47,21 @@ REGIONS = {
 }
 
 PAGE = """<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="跨方言语音克隆试听 Demo：7 个汉语方言 × 6 个系统。">
-<title>DSI-CDTTS · 跨方言语音克隆 Demo</title>
+<meta name="description" content="Cross-dialect voice cloning audio demo: 7 Chinese dialects × 6 systems.">
+<title>DSI-CDTTS · Cross-Dialect Voice Cloning Demo</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg stroke='%23111' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M8 16h1.5'/%3E%3Cpath d='M13 11v10'/%3E%3Cpath d='M18 8v16'/%3E%3Cpath d='M23 13v6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-  <h1>DSI-CDTTS · 跨方言语音克隆 Demo</h1>
-  <p class="sub">7 个汉语方言 × 6 个系统 · 参考音色 + 目标文本 → 目标方言语音</p>
-  <nav aria-label="方言">
+  <h1>DSI-CDTTS · Cross-Dialect Voice Cloning Demo</h1>
+  <p class="sub">7 Chinese dialects × 6 systems · reference voice + target text → target-dialect speech</p>
+  <nav aria-label="Dialects">
 __NAV__
   </nav>
 </header>
@@ -71,7 +71,7 @@ __CASES__
 </main>
 
 <footer>
-  <p>匿名投稿，仅供评审 · Anonymous submission for review</p>
+  <p>Anonymous submission · For review only</p>
 </footer>
 
 <script>
@@ -91,10 +91,10 @@ __CASES__
 """
 
 CASE = """  <section id="{case_id}">
-    <h2>{dialect} <span class="meta">{source} → {target} · 样本 {sample}</span></h2>
+    <h2>{dialect} <span class="meta">{source} → {target} · sample {sample}</span></h2>
     <p class="text" lang="zh">{text}</p>
     <div class="audio-row">
-      <span class="label">参考 · {source}</span>
+      <span class="label">Reference · {source}</span>
       <audio controls preload="none" src="{ref}"></audio>
     </div>
 {rows}
@@ -122,7 +122,7 @@ def main() -> int:
         target = case["target_language"]
         source = case["source_language"]
         region = REGIONS.get(case["ref_region"], case["ref_region"])
-        nav.append(f'    <a href="#{case_id}">{html.escape(target)}</a>')
+        nav.append(f'    <a href="#{case_id}">{html.escape(DIALECTS.get(target, target))}</a>')
 
         rows = []
         for key, label in MODELS:
@@ -138,9 +138,9 @@ def main() -> int:
         cases.append(
             CASE.format(
                 case_id=case_id,
-                dialect=html.escape(target),
-                source=html.escape(source),
-                target=html.escape(target),
+                dialect=html.escape(DIALECTS.get(target, target)),
+                source=html.escape(DIALECTS.get(source, source)),
+                target=html.escape(DIALECTS.get(target, target)),
                 sample=html.escape(case["sample"]),
                 text=html.escape(case["text"].strip()),
                 ref=case["ref_audio"],

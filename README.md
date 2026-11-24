@@ -5,10 +5,12 @@ A plain static page for anonymous review: seven Chinese dialects, six systems,
 audio players, no JavaScript framework and no build step.
 
 **Live page:** <https://opendialect.github.io/DSI-CDTTS/>
+(the URL follows the GitHub account and repository names — see
+[What URL will the site get?](DEPLOY.md#what-url-will-the-site-get))
 
-Each case shows the reference recording, the target sentence, and one player
-per system (the first one is ours). No objective or subjective scores are shown
-on the page — all numbers are in the paper.
+Each case shows the reference recording, the target sentence (in Chinese), and
+one player per system; the first player is ours. All page text is English. No
+objective or subjective scores are shown — all numbers are in the paper.
 
 ![Preview](docs/preview-desktop.png)
 
@@ -54,8 +56,8 @@ static bundle. After changing audio or case selection:
 python3 tools/build_site.py /path/to/demo_7dialects_6models/manifest.json
 ```
 
-The script also fails if any referenced audio file is missing. The manifest is
-not committed (it contains per-clip scores).
+The script fails if any referenced audio file is missing. The manifest is not
+committed (it contains per-clip scores).
 
 ## Supplementary zip
 
@@ -77,9 +79,3 @@ Reviewers unzip it and double-click `index.html`; everything plays offline.
 
 Audio and page are provided for anonymous review only — see [LICENSE](LICENSE).
 Do not redistribute the recordings.
-
-## 中文
-
-白色背景的静态试听页：7 个方言 × 6 个系统，每个 case 一条参考音频、一句目标
-文本、7 个播放器（参考 + 6 个系统，第一个是本文）。无脚本框架、无构建步骤，
-双击 `index.html` 即可离线试听；发布只需 `git push origin main`。
