@@ -39,21 +39,21 @@ window.DEMO_DATA = {
     "main": {
       "labelEn": "Ours (DSI-CDTTS)",
       "labelZh": "本文主模型",
-      "noteEn": "VoxCPM2 + M2D + D2D + diaref v1",
-      "noteZh": "VoxCPM2 + M2D + D2D + diaref v1",
+      "noteEn": "Full method",
+      "noteZh": "完整方法",
       "ours": true
     },
     "m2d": {
       "labelEn": "M2D only",
       "labelZh": "仅 M2D",
-      "noteEn": "VoxCPM2 + M2D (final, 1 ep)",
-      "noteZh": "VoxCPM2 + M2D（final，1 ep）"
+      "noteEn": "Ablation: M2D-only training",
+      "noteZh": "消融：仅 M2D 训练"
     },
     "cv3": {
-      "labelEn": "D2D w/ CV3 refs",
-      "labelZh": "D2D + CV3 参考",
-      "noteEn": "VoxCPM2 + D2D, CV3-cloned references",
-      "noteZh": "VoxCPM2 + D2D，CV3 克隆参考"
+      "labelEn": "D2D w/ cloned refs",
+      "labelZh": "D2D + 克隆参考",
+      "noteEn": "Ablation: D2D with cloned references",
+      "noteZh": "消融：D2D + 克隆参考"
     },
     "cosy": {
       "labelEn": "CosyVoice3",
@@ -70,8 +70,8 @@ window.DEMO_DATA = {
     "vox": {
       "labelEn": "VoxCPM2 base",
       "labelZh": "VoxCPM2 base",
-      "noteEn": "Base TTS model",
-      "noteZh": "基座 TTS 模型"
+      "noteEn": "Public base model",
+      "noteZh": "公开基座模型"
     }
   },
   "modelOrder": [

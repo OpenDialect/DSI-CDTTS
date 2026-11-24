@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build the offline supplement zip: reviewers unzip it and double-click
 # index.html. Everything the page needs is inside; no network required.
+# The deployment checklist and the git history are intentionally excluded.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -12,12 +13,12 @@ zip -r -q -X "$out" \
   index.html \
   .nojekyll \
   README.md \
-  DEPLOY.md \
   LICENSE \
   assets \
   cases \
   docs \
-  -x '*.DS_Store' '*__pycache__*' '*/.*'
+  tools \
+  -x '*.DS_Store' '*__pycache__*' '*/.*' '*.zip'
 
 echo "wrote $out"
 du -h "$out" | awk '{print "size: "$1}'

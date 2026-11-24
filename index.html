@@ -71,7 +71,7 @@
       <span data-i18n="h1a">Cross-Dialect Voice Cloning</span><br>
       <em class="accent" data-i18n="h1b">Demo</em>
     </h1>
-    <p class="lede" data-i18n="lede"></p>
+    <p class="lede" data-i18n="lede">A reference recording in one Chinese dialect, a target sentence in another. The task: keep the speaker and switch to the target dialect. Seven dialects, six systems, one clip per system — listen and judge for yourself.</p>
 
     <div class="task">
       <div class="task-node">
@@ -83,7 +83,7 @@
       <div class="task-node">
         <span class="task-kicker" data-i18n="taskTextKicker">Target text</span>
         <span class="task-main" data-i18n="taskTextMain">Different dialect</span>
-        <span class="task-sub" data-i18n="taskTextSub">switch the variety</span>
+        <span class="task-sub" data-i18n="taskTextSub">switch to the target dialect</span>
       </div>
       <span class="task-op task-op--arrow" aria-hidden="true">→</span>
       <div class="task-node task-node--out">
@@ -99,24 +99,25 @@
       <div><dt data-i18n="statClips">Audio clips</dt><dd>49</dd></div>
     </dl>
 
-    <p class="hint" data-i18n-html="hintHtml"></p>
+    <p class="hint" data-i18n-html="hintHtml">Headphones recommended · <kbd>Space</kbd> play / pause · <kbd>←</kbd> <kbd>→</kbd> seek 5 s · <kbd>Esc</kbd> stop</p>
   </section>
 
-  <section id="demo" class="cases" aria-labelledby="demo-heading">
+  <section id="demo" class="cases" aria-labelledby="demo-heading" tabindex="-1">
     <h2 id="demo-heading" class="visually-hidden" data-i18n="demoHeading">Listen to the demos</h2>
-    <noscript><p class="noscript">This demo needs JavaScript to build the audio players.</p></noscript>
+    <noscript><p class="noscript">This demo needs JavaScript to build the audio players. Enable JavaScript, or see README.md.<br>
+    本页面需要 JavaScript 生成播放器，请启用 JavaScript，或参见 README.md。</p></noscript>
   </section>
+</main>
 
-  <footer class="site-footer">
+<footer class="site-footer">
     <div class="footer-inner">
       <p class="footer-title" data-i18n="footerTitle">Anonymous submission · For review only</p>
-      <p data-i18n="footerData"></p>
-      <p data-i18n="footerNoMetrics"></p>
-      <p data-i18n="footerOffline"></p>
-      <p class="footer-meta" id="footer-meta"></p>
+      <p data-i18n="footerData">Seven Chinese dialects × six systems: 42 generated clips plus 7 reference recordings. Generated audio was exported to MP3 (48 kHz mono) without loudness normalisation or other post-processing; references are 16 kHz.</p>
+      <p data-i18n="footerNoMetrics">This page deliberately shows no objective or subjective scores; all metrics are reported in the paper.</p>
+      <p data-i18n="footerOffline">Everything here is self-contained: no external fonts, scripts or analytics. The page also works offline from a local copy.</p>
+      <p class="footer-meta" id="footer-meta">Static HTML · CSS · JS · 49 audio clips · no trackers</p>
     </div>
   </footer>
-</main>
 
 <script src="assets/peaks.js"></script>
 <script src="assets/data.js"></script>

@@ -191,18 +191,14 @@ button { font: inherit; color: inherit; }
   background: var(--surface-2);
   color: var(--text);
 }
+.nav-chip:focus-visible {
+  outline-offset: -2px;
+}
 .nav-chip.is-active {
   color: var(--accent);
   background: var(--accent-soft);
   border-color: var(--accent-line);
 }
-.nav-chip .chip-roman {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  opacity: 0.65;
-}
-
 .controls {
   display: flex;
   align-items: center;
@@ -409,6 +405,10 @@ html[data-lang="zh"] .lede { font-size: 16px; }
 /* --------------------------------------------------------------------------
    Cases
    -------------------------------------------------------------------------- */
+
+#demo:focus {
+  outline: none;
+}
 
 .cases {
   max-width: 1220px;
@@ -749,26 +749,6 @@ html[data-lang="zh"] .target-text { font-size: 16.5px; }
   border: 1px dashed var(--line-strong);
   border-radius: 14px;
   color: var(--muted);
-}
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 28px;
-  z-index: 80;
-  transform: translate(-50%, 12px);
-  padding: 9px 16px;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--bg);
-  font-size: 12.5px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-.toast.is-visible {
-  opacity: 1;
-  transform: translate(-50%, 0);
 }
 
 @media (max-width: 980px) {

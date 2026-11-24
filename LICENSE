@@ -1,8 +1,9 @@
 Copyright (c) 2026 Anonymous Authors. All rights reserved.
 
 This repository — including the demo page, its source files, the reference
-recordings and the generated audio clips — is provided solely for anonymous
-peer review of the accompanying submission.
+recordings and the generated audio clips — is published during anonymous peer
+review of the accompanying submission. It is made publicly readable only so
+that reviewers can open a single link and listen to the samples.
 
 Permission is granted to reviewers to access, download and listen to the
 material for the purpose of evaluating the submission. Any other use,
@@ -10,4 +11,5 @@ reproduction, redistribution, publication or inclusion in another dataset is
 not permitted without written permission from the authors.
 
 The reference recordings are excerpts from a dialect speech corpus used for
-evaluation and are included only to make the demo self-contained for review.
+evaluation and are included only to make the demo self-contained for review;
+their inclusion in a publicly readable page is limited to the review period.

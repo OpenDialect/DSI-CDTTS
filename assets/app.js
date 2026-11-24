@@ -48,7 +48,7 @@
       h1b: "Demo",
       lede:
         "A reference recording in one Chinese dialect, a target sentence in another. " +
-        "The task: keep the speaker, switch the variety. Seven dialects, six systems, " +
+        "The task: keep the speaker and switch to the target dialect. Seven dialects, " + "six systems, " +
         "one clip per system — listen and judge for yourself.",
       taskRefKicker: "Reference voice",
       taskRefMain: "Source-dialect speech",
@@ -61,7 +61,7 @@
       taskOutSub: "6 systems to compare",
       statDialects: "Dialects",
       statSystems: "Systems",
-      statClips: "Clips",
+      statClips: "Audio clips",
       hintHtml:
         "Headphones recommended · <kbd>Space</kbd> play / pause · " +
         "<kbd>←</kbd> <kbd>→</kbd> seek 5 s · <kbd>Esc</kbd> stop",
@@ -74,13 +74,14 @@
       playAria: "Play {label} — {dialect} case",
       pauseAria: "Pause {label} — {dialect} case",
       seqAria: "Play all six systems of the {dialect} case back to back",
+      stopSeqAria: "Stop the {dialect} case playback",
       themeToggleAria: "Switch between light and dark theme",
       langToggleAria: "Switch to Chinese",
       footerTitle: "Anonymous submission · For review only",
       footerData:
         "Seven Chinese dialects × six systems: 42 generated clips plus 7 reference " +
-        "recordings. Model outputs are the raw evaluation files (48 kHz mono MP3) — " +
-        "no loudness normalisation or other post-processing has been applied.",
+        "recordings. Generated audio was exported to MP3 (48 kHz mono) without " +
+        "loudness normalisation or other post-processing; references are 16 kHz.",
       footerNoMetrics:
         "This page deliberately shows no objective or subjective scores; all metrics " +
         "are reported in the paper.",
@@ -94,7 +95,7 @@
       pageTitle: "DSI-CDTTS · 跨方言语音克隆试听 Demo",
       skip: "跳到试听",
       brandSub: "音频 Demo",
-      navAria: "跳转到某个方言 case",
+      navAria: "跳转到某个方言样本",
       eyebrow: "匿名投稿 · 音频 Demo",
       h1a: "跨方言语音克隆",
       h1b: "试听 Demo",
@@ -122,15 +123,16 @@
       playAll: "顺序播放",
       stopSeq: "停止",
       oursTag: "本文",
-      playAria: "{dialect} case：播放 {label}",
-      pauseAria: "{dialect} case：暂停 {label}",
-      seqAria: "顺序播放 {dialect} case 的六个系统",
+      playAria: "{dialect}样本：播放 {label}",
+      pauseAria: "{dialect}样本：暂停 {label}",
+      seqAria: "顺序播放{dialect}样本的 6 个系统",
+      stopSeqAria: "停止播放{dialect}样本",
       themeToggleAria: "切换浅色 / 深色主题",
-      langToggleAria: "Switch to English",
+      langToggleAria: "切换到英文",
       footerTitle: "匿名投稿 · 仅供评审",
       footerData:
-        "七个汉语方言 × 六个系统：42 段生成音频与 7 段参考录音。模型输出为评测原始文件" +
-        "（48 kHz 单声道 MP3），未做响度归一化或其他后处理。",
+        "七个汉语方言 × 六个系统：42 段生成音频与 7 段参考录音。生成音频导出为" +
+        " 48 kHz 单声道 MP3，未做响度归一化或其他后处理；参考录音为 16 kHz。",
       footerNoMetrics: "本页刻意不展示客观 / 主观指标，完整指标见论文。",
       footerOffline:
         "本页完全自包含：无外部字体、脚本或统计代码，下载到本地也可离线试听。",
@@ -334,6 +336,9 @@
       return;
     }
     var ratio = (event.clientX - rect.left) / rect.width;
+    if (state.seq && state.seq.rec.players[state.seq.idx] !== p) {
+      stopSequence(false);
+    }
     if (p !== state.current) {
       pauseAll(p);
       state.current = p;
@@ -580,13 +585,26 @@
 
   /* -------------------------------------------------------------- sequence */
 
+  function nextPlayable(rec, from) {
+    for (var i = from; i < rec.players.length; i++) {
+      if (!rec.players[i].error) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   function startSequence(rec) {
+    var first = nextPlayable(rec, 0);
+    if (first < 0) {
+      return;
+    }
     stopSequence(false);
     pauseAll(null);
-    state.seq = { rec: rec, idx: 0 };
+    state.seq = { rec: rec, idx: first };
     rec.seqBtn.classList.add("is-active");
     updateSeqLabels();
-    playPlayer(rec.players[0], true);
+    playPlayer(rec.players[first], true);
   }
 
   function advanceSequence() {
@@ -594,9 +612,10 @@
     if (!seq) {
       return;
     }
-    seq.idx += 1;
-    if (seq.idx < seq.rec.players.length) {
-      playPlayer(seq.rec.players[seq.idx], true);
+    var next = nextPlayable(seq.rec, seq.idx + 1);
+    if (next >= 0) {
+      seq.idx = next;
+      playPlayer(seq.rec.players[next], true);
     } else {
       stopSequence(false);
       pauseAll(null);
@@ -621,10 +640,12 @@
       var active = !!(state.seq && state.seq.rec === rec);
       rec.seqIcon.innerHTML = active ? ICON_STOP : ICON_PLAY;
       rec.seqLabel.textContent = active ? t("stopSeq") : t("playAll");
+      var dialect = dialectName(rec.data.dialect, state.lang);
       rec.seqBtn.setAttribute(
         "aria-label",
-        fmt(t("seqAria"), { dialect: dialectName(rec.data.dialect, state.lang) })
+        active ? fmt(t("stopSeqAria"), { dialect: dialect }) : fmt(t("seqAria"), { dialect: dialect })
       );
+      rec.seqBtn.setAttribute("aria-pressed", active ? "true" : "false");
     });
   }
 
@@ -682,6 +703,9 @@
     root.setAttribute("data-theme", state.theme);
     refreshPalette();
     players.forEach(drawPlayer);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.setAttribute("content", state.theme === "dark" ? "#0f1013" : "#f7f4ef");
+    });
     document
       .getElementById("theme-toggle")
       .setAttribute("aria-label", t("themeToggleAria"));
@@ -771,6 +795,11 @@
 
     var ghost = make("span", "pill pill--ghost");
     ghost.textContent = "#" + c.sample;
+    dynamicUpdaters.push(function () {
+      var label = (state.lang === "zh" ? "样本 " : "sample ") + c.sample;
+      ghost.setAttribute("title", label);
+      ghost.setAttribute("aria-label", label);
+    });
 
     var actions = make("div", "case-actions");
     var seqBtn = make("button", "seq-btn");
@@ -789,7 +818,7 @@
         t("targetLabel") + " · " + dialectName(c.dialect, state.lang);
     });
 
-    var quote = make("blockquote", "target-text");
+    var quote = make("p", "target-text");
     quote.lang = "zh";
     quote.textContent = c.text;
 
@@ -924,6 +953,11 @@
     return null;
   }
 
+  function isPlayerVisible(p) {
+    var rect = p.wrap.getBoundingClientRect();
+    return rect.bottom > 0 && rect.top < window.innerHeight;
+  }
+
   function onKeyDown(event) {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) {
       return;
@@ -939,18 +973,11 @@
       pauseAll(null);
       return;
     }
-    if (tag === "button" || tag === "a" || tag === "summary") {
-      return;
-    }
-    if (event.key === " " || event.code === "Space") {
-      var p = state.current || playerInView();
-      if (!p) {
-        return;
-      }
-      event.preventDefault();
-      togglePlayer(p);
-    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       var current = state.current;
+      if (!current || !isPlayerVisible(current)) {
+        current = playerInView();
+      }
       if (!current) {
         return;
       }
@@ -961,8 +988,23 @@
       if (!duration) {
         return;
       }
-      var next = Math.max(0, Math.min(duration - 0.05, (current.progress * duration) + delta));
+      var next = Math.max(0, Math.min(duration - 0.05, current.progress * duration + delta));
       seekToRatio(current, next / duration);
+      return;
+    }
+    if (tag === "button" || tag === "a" || tag === "summary") {
+      return;
+    }
+    if (event.key === " " || event.code === "Space") {
+      var p = state.current;
+      if (!p || !isPlayerVisible(p)) {
+        p = playerInView() || p;
+      }
+      if (!p) {
+        return;
+      }
+      event.preventDefault();
+      togglePlayer(p);
     }
   }
 

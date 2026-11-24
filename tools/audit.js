@@ -76,6 +76,31 @@
     }
     return +((painted / (data.length / 4)) * 100).toFixed(1);
   }
+  function measureContrast() {
+    var probes = [
+      [".lede", "lede"], [".hint", "hint"], [".clip-name", "clip name"],
+      [".clip-note", "clip note"], [".clip-dur", "clip duration"],
+      [".ref-label", "ref label"], [".ref-region", "ref region"],
+      [".target-label", "target label"], [".case-index", "case index"],
+      [".nav-chip", "nav chip"], [".seq-btn", "seq button"], [".time", "time"],
+      [".task-kicker", "task kicker"], [".task-sub", "task sub"],
+      [".brand-sub", "brand sub"], [".footer-inner", "footer"],
+      [".footer-meta", "footer meta"], [".stats dt", "stat label"], [".pill", "pill"]
+    ];
+    var out = [];
+    probes.forEach(function (pair) {
+      var el = document.querySelector(pair[0]);
+      if (!el) return;
+      out.push({
+        what: pair[1],
+        ratio: contrast(parseColor(getComputedStyle(el).color), bgOf(el)),
+        size: css(el, "font-size")
+      });
+    });
+    out.sort(function (a, b) { return a.ratio - b.ratio; });
+    return out;
+  }
+
   function gridCols(el) {
     var tpl = getComputedStyle(el).gridTemplateColumns;
     return tpl ? tpl.split(" ").filter(Boolean).length : 0;
@@ -117,6 +142,22 @@
       playLog.push({ op: "pause", src: String(this.src).split("/").pop() });
       return origPause.apply(this, arguments);
     };
+
+    var seekLog = [];
+    var currentTimeDesc = Object.getOwnPropertyDescriptor(
+      HTMLMediaElement.prototype,
+      "currentTime"
+    );
+    Object.defineProperty(HTMLMediaElement.prototype, "currentTime", {
+      configurable: true,
+      get: function () {
+        return currentTimeDesc.get.call(this);
+      },
+      set: function (value) {
+        seekLog.push(+Number(value).toFixed(2));
+        return currentTimeDesc.set.call(this, value);
+      }
+    });
 
     var docEl = document.documentElement;
     if (location.hash) {
@@ -217,6 +258,16 @@
     );
     ok("header is sticky", css(document.querySelector(".site-header"), "position") === "sticky", "");
     ok(
+      "footer is outside main (contentinfo landmark)",
+      !!document.querySelector(".site-footer") && !document.querySelector("main .site-footer"),
+      ""
+    );
+    ok(
+      "skip-link target is focusable",
+      !!document.getElementById("demo") && document.getElementById("demo").getAttribute("tabindex") === "-1",
+      ""
+    );
+    ok(
       "case has scroll-margin",
       css(document.querySelector(".case"), "scroll-margin-top") !== "0px",
       css(document.querySelector(".case"), "scroll-margin-top")
@@ -273,31 +324,26 @@
       docEl.getAttribute("data-theme")
     );
 
-    /* ---------- contrast ---------- */
-    var probes = [
-      [".lede", "lede"], [".hint", "hint"], [".clip-name", "clip name"],
-      [".clip-note", "clip note"], [".clip-dur", "clip duration"],
-      [".ref-label", "ref label"], [".ref-region", "ref region"],
-      [".target-label", "target label"], [".case-index", "case index"],
-      [".nav-chip", "nav chip"], [".seq-btn", "seq button"], [".time", "time"],
-      [".task-kicker", "task kicker"], [".task-sub", "task sub"],
-      [".brand-sub", "brand sub"], [".footer-inner", "footer"],
-      [".footer-meta", "footer meta"], [".stats dt", "stat label"], [".pill", "pill"]
-    ];
-    var contrasts = [];
-    probes.forEach(function (pair) {
-      var el = document.querySelector(pair[0]);
-      if (!el) return;
-      contrasts.push({
-        what: pair[1],
-        ratio: contrast(parseColor(getComputedStyle(el).color), bgOf(el)),
-        size: css(el, "font-size")
-      });
-    });
-    contrasts.sort(function (a, b) { return a.ratio - b.ratio; });
-    report.contrast = contrasts;
-    var lowContrast = contrasts.filter(function (c) { return c.ratio < 4.5; });
-    ok("all sampled text contrast >= 4.5", lowContrast.length === 0, lowContrast);
+    /* ---------- contrast, light and dark ---------- */
+    var noTransitions = document.createElement("style");
+    noTransitions.textContent = "*,*::before,*::after{transition:none!important;animation:none!important}";
+    document.head.appendChild(noTransitions);
+
+    var lightContrast = measureContrast();
+    report.contrast = lightContrast;
+    var lowLight = lightContrast.filter(function (c) { return c.ratio < 4.5; });
+    ok("text contrast >= 4.5 (light theme)", lowLight.length === 0, lowLight);
+
+    themeBtn.click();
+    await sleep(500);
+    var darkContrast = measureContrast();
+    report.contrastDark = darkContrast;
+    var lowDark = darkContrast.filter(function (c) { return c.ratio < 4.5; });
+    ok("text contrast >= 4.5 (dark theme)", lowDark.length === 0, lowDark);
+    themeBtn.click();
+    await sleep(300);
+    ok("theme returns to the starting theme", docEl.getAttribute("data-theme") === themeBefore, docEl.getAttribute("data-theme"));
+    noTransitions.remove();
 
     /* ---------- anchor + sticky header ---------- */
     docEl.style.scrollBehavior = "auto";
@@ -388,6 +434,11 @@
     await sleep(250);
     ok("sequence starts", seqBtn.classList.contains("is-active"), seqBtn.textContent.trim());
     ok(
+      "sequence button announces stop while active",
+      /Stop|停止/.test(seqBtn.getAttribute("aria-label") || "") && seqBtn.getAttribute("aria-pressed") === "true",
+      { label: seqBtn.getAttribute("aria-label"), pressed: seqBtn.getAttribute("aria-pressed") }
+    );
+    ok(
       "sequence plays the main model first",
       playLog.length > 0 && playLog[0].op === "play" && /01_main/.test(playLog[0].src),
       playLog.slice(0, 2)
@@ -410,21 +461,48 @@
     await sleep(200);
     ok("sequence stops", !seqBtn.classList.contains("is-active"), seqBtn.textContent.trim());
 
+    playLog.length = 0;
+    seqBtn.click();
+    await sleep(200);
+    key("Escape");
+    await sleep(250);
+    ok(
+      "Escape stops the sequence",
+      !seqBtn.classList.contains("is-active") && playLog.some(function (e) { return e.op === "pause"; }),
+      playLog.slice(-2)
+    );
+
     /* ---------- keyboard ---------- */
     playLog.length = 0;
     document.body.focus();
     key(" ", "Space");
     await sleep(300);
     ok("space toggles playback", playLog.length > 0, playLog.slice(-2));
-    var beforeArrow = Array.prototype.map.call(document.querySelectorAll(".time"), function (n) {
-      return n.textContent;
-    }).join("|");
-    key("ArrowRight");
+    clips[3].querySelector(".play").click();
     await sleep(250);
-    var afterArrow = Array.prototype.map.call(document.querySelectorAll(".time"), function (n) {
-      return n.textContent;
-    }).join("|");
-    ok("right arrow seeks forward", beforeArrow !== afterArrow, { before: beforeArrow.slice(0, 30), after: afterArrow.slice(0, 30) });
+    clips[3].querySelector(".play").click();
+    await sleep(200);
+    seekLog.length = 0;
+    key("ArrowRight");
+    await sleep(300);
+    ok("right arrow seeks forward", seekLog.length > 0 && seekLog[0] > 0, seekLog.slice(-3));
+
+    clips[0].querySelector(".play").click();
+    await sleep(200);
+    clips[0].querySelector(".play").click();
+    await sleep(150);
+    var focusBtn = clips[0].querySelector(".play");
+    focusBtn.focus();
+    seekLog.length = 0;
+    focusBtn.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowRight", code: "ArrowRight", bubbles: true, cancelable: true })
+    );
+    await sleep(300);
+    ok(
+      "arrows still seek while a play button has focus",
+      seekLog.length > 0,
+      { seeks: seekLog.slice(-3) }
+    );
 
     /* ---------- output ---------- */
     var pre = document.createElement("pre");

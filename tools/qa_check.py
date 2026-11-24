@@ -53,7 +53,9 @@ def link_check() -> list[str]:
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:href|src)="([^"#:]+)"', html)
     for ref in refs:
-        if ref.startswith("assets/") and not (ROOT / ref).is_file():
+        if ref.startswith(("http://", "https://", "//", "data:")):
+            continue
+        if not (ROOT / ref).is_file():
             problems.append(f"index.html references missing file: {ref}")
 
     data = (ROOT / "assets" / "data.js").read_text(encoding="utf-8")
@@ -151,9 +153,10 @@ def main() -> int:
 
     chrome = find_chrome()
     if not chrome:
-        print("  WARN: no Chrome/Chromium found, skipping browser audit")
+        print("  FAIL: no Chrome/Chromium/Edge found; the browser audit cannot run")
+        print("        install a browser or set CHROME=/path/to/chrome, then re-run")
         AUDIT_COPY.unlink(missing_ok=True)
-        return 1 if failures else 0
+        return 1
 
     build_audit_copy()
     server = None
@@ -166,7 +169,9 @@ def main() -> int:
     else:
         url = AUDIT_COPY.as_uri()
     try:
-        for width, height, label in [(1440, 900, "desktop 1440"), (1024, 768, "tablet 1024"), (390, 844, "phone 390")]:
+        # headless Chrome clamps windows to ~500 px width, so the "phone" run is
+        # the narrow layout rather than a literal 390 px device viewport.
+        for width, height, label in [(1440, 900, "desktop 1440"), (1024, 768, "tablet 1024"), (390, 844, "phone (narrow)")]:
             print(f"\n== browser audit @ {label} ==")
             try:
                 raw = run_chrome(chrome, width, height, 20000, url)
@@ -189,7 +194,9 @@ def main() -> int:
                 print("  ERROR", err)
                 failures += 1
             low = [c for c in report.get("contrast", []) if c["ratio"] < 4.5]
-            print("  contrast below 4.5:", json.dumps(low, ensure_ascii=False))
+            print("  light-theme contrast below 4.5:", json.dumps(low, ensure_ascii=False))
+            low_dark = [c for c in report.get("contrastDark", []) if c["ratio"] < 4.5]
+            print("  dark-theme contrast below 4.5:", json.dumps(low_dark, ensure_ascii=False))
             if report.get("audioLoaded"):
                 print("  audio elements:", json.dumps(report["audioLoaded"], ensure_ascii=False))
         print("\n== deep link check ==")
