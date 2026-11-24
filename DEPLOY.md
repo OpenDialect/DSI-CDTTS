@@ -54,7 +54,7 @@ authors. The live site is <https://opendialect.github.io/DSI-CDTTS/>.
 
 ```sh
 ./tools/package_offline.sh
-# → DSI-CDTTS-demo-page.zip (~3.4 MB)
+# → DSI-CDTTS-demo-page.zip (~3.2 MB)
 ```
 
 Reviewers unzip and open `index.html`; no network needed. The archive omits

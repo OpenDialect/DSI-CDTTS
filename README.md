@@ -61,7 +61,7 @@ not committed (it contains per-clip scores).
 
 ```sh
 ./tools/package_offline.sh
-# → DSI-CDTTS-demo-page.zip (~3.4 MB)
+# → DSI-CDTTS-demo-page.zip (~3.2 MB)
 ```
 
 Reviewers unzip it and double-click `index.html`; everything plays offline.
