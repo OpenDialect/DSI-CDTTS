@@ -92,7 +92,7 @@ __CASES__
 """
 
 CASE = """  <section id="{case_id}">
-    <h2>{dialect} <span class="meta">{source} → {target} · sample {sample}</span></h2>
+    <h2>{dialect} <span class="meta">{source} → {target}</span></h2>
     <p class="text" lang="zh">{text}</p>
     <div class="audio-row">
       <span class="label">Reference · {source}</span>
@@ -142,7 +142,6 @@ def main() -> int:
                 dialect=html.escape(DIALECTS.get(target, target)),
                 source=html.escape(DIALECTS.get(source, source)),
                 target=html.escape(DIALECTS.get(target, target)),
-                sample=html.escape(case["sample"]),
                 text=html.escape(case["text"].strip()),
                 ref=case["ref_audio"],
                 rows="\n".join(rows),
