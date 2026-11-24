@@ -1,0 +1,25 @@
+name: Sync gh-pages with main
+
+# The published demo is served from the gh-pages branch. Keep it identical to
+# main so a normal `git push origin main` is all that is needed to redeploy.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Force gh-pages to this commit
+        run: git push --force origin HEAD:gh-pages
