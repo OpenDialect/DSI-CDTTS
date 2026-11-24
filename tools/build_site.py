@@ -19,13 +19,14 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "index.html"
 
 DIALECTS = {
-    "粤语": "Yue",
+    "粤语": "Cantonese",
     "吴语": "Wu",
-    "四川话": "Sichuan",
-    "东北话": "Northeastern",
+    "四川话": "Sichuanese",
+    "东北话": "Dongbei",
     "陕西话": "Shaanxi",
     "河南话": "Henan",
-    "闽南话": "Southern Min",
+    "闽南话": "Minnan",
+    "闽南语": "Minnan",
 }
 
 MODELS = [
