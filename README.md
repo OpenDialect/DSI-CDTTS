@@ -73,14 +73,19 @@ python3 -m http.server 8000
 
 ## Deploy the anonymised GitHub Pages link
 
-See **[DEPLOY.md](DEPLOY.md)** for the full step-by-step checklist. Short
-version:
+This folder is already published at
+`https://github.com/OpenDialect/DSI-CDTTS` (Pages: enable once under
+**Settings → Pages → Deploy from a branch → `main` / `(root)`**).
+
+See **[DEPLOY.md](DEPLOY.md)** for the full step-by-step checklist, including
+how to create a fresh anonymous account. Short version:
 
 1. Create a throw-away GitHub account with a neutral name (never your personal
    one — the account name is public).
 2. `./tools/init_git_anonymous.sh` — initialises `main`, sets a repo-local
    anonymous commit identity, makes the first commit.
 3. `git remote add origin https://github.com/<anon-account>/<repo>.git`
+   (or `git remote set-url origin …` if this folder already has a remote)
 4. `git push -u origin main`
 5. Repository **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
 6. The demo is then at `https://<anon-account>.github.io/<repo>/`.

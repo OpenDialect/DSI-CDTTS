@@ -34,6 +34,10 @@ offline and reviewers can unzip and open it.
 
 ## 2. Create an empty public repository
 
+If the repository already exists (this folder is already published at
+`https://github.com/OpenDialect/DSI-CDTTS`), skip this step and continue with
+step 3.
+
 - Name: neutral, e.g. `cross-dialect-demo`.
 - Description: `Audio demo (anonymous submission)` or empty.
 - Visibility: **Public** (GitHub Pages for private repos requires a paid plan).
@@ -65,7 +69,8 @@ If you already have commits with your real identity, do not push them. Remove
 ## 4. Push
 
 ```sh
-git remote add origin https://github.com/<anon-account>/<repo>.git
+git remote add origin https://github.com/<anon-account>/<repo>.git \
+  || git remote set-url origin https://github.com/<anon-account>/<repo>.git
 git push -u origin main
 ```
 
@@ -83,6 +88,13 @@ When git asks for credentials:
 Then double-check on github.com: the commit author must read
 `Anonymous Author`, the account must have no personal details, and there must
 be no other branches or tags.
+
+**Push identity matters as much as commit identity.** GitHub shows the pushing
+account in the repository's public activity; if a personal account (or a
+personal account added as a collaborator) pushes, that links the demo to you.
+Push from the anonymous account itself — add the deploy key to that account's
+**Settings → SSH keys** rather than granting a personal account collaborator
+access, and remove any collaborator that was only used to bootstrap the repo.
 
 ## 5. Enable Pages
 

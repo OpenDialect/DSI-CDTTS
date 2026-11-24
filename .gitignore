@@ -3,3 +3,6 @@ _audit.html
 __pycache__/
 *.zip
 .venv/
+manifest.json
+manifest.csv
+*.bundle
