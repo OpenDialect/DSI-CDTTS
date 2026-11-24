@@ -1,0 +1,5 @@
+.DS_Store
+_audit.html
+__pycache__/
+*.zip
+.venv/

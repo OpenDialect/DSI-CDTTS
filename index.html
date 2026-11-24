@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Anonymous audio demo for review: cross-dialect voice cloning across 7 Chinese dialects and 6 systems.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DSI-CDTTS · Cross-Dialect Voice Cloning Demo">
+<meta property="og:description" content="Anonymous audio demo: seven Chinese dialects × six systems, one case per dialect.">
+<meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1013" media="(prefers-color-scheme: dark)">
+<title>DSI-CDTTS · Cross-Dialect Voice Cloning Demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b23a26'/%3E%3Cg stroke='%23fff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M8 16h1'/%3E%3Cpath d='M12 11v10'/%3E%3Cpath d='M16 7v18'/%3E%3Cpath d='M20 12v8'/%3E%3Cpath d='M24 15h1'/%3E%3C/g%3E%3C/svg%3E">
+<script>
+  (function () {
+    var root = document.documentElement;
+    var theme = null, lang = null;
+    try {
+      theme = localStorage.getItem("cdd-theme");
+      lang = localStorage.getItem("cdd-lang");
+    } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    }
+    if (lang !== "en" && lang !== "zh") {
+      lang = /^zh/i.test(navigator.language || "") ? "zh" : "en";
+    }
+    root.setAttribute("data-theme", theme);
+    root.setAttribute("data-lang", lang);
+    root.setAttribute("lang", lang === "zh" ? "zh-CN" : "en");
+  })();
+</script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#demo" data-i18n="skip">Skip to demo</a>
+
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="#top" aria-label="DSI-CDTTS, back to top">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+          <path d="M5 16h1.5"/><path d="M10 10.5v11"/><path d="M15 6.5v19"/>
+          <path d="M20 11.5v9"/><path d="M25 14.5h1.5"/>
+        </g>
+      </svg>
+      <span class="brand-name">DSI-CDTTS</span>
+      <span class="brand-sub" data-i18n="brandSub">Audio Demo</span>
+    </a>
+
+    <nav class="case-nav" aria-label="Dialect cases" data-i18n-aria="navAria">
+      <div class="case-nav-track" id="case-nav-track"></div>
+    </nav>
+
+    <div class="controls">
+      <button class="chip-btn" id="lang-toggle" type="button" aria-label="Switch language">中文</button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g stroke-linecap="round"><path d="M12 2.6v2.2"/><path d="M12 19.2v2.2"/><path d="M2.6 12h2.2"/><path d="M19.2 12h2.2"/><path d="M5.4 5.4l1.6 1.6"/><path d="M17 17l1.6 1.6"/><path d="M18.6 5.4L17 7"/><path d="M7 17l-1.6 1.6"/></g></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.4 8.4 0 1 0 10.7 10.7z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <p class="eyebrow" data-i18n="eyebrow">Anonymous submission · Audio demo</p>
+    <h1>
+      <span data-i18n="h1a">Cross-Dialect Voice Cloning</span><br>
+      <em class="accent" data-i18n="h1b">Demo</em>
+    </h1>
+    <p class="lede" data-i18n="lede"></p>
+
+    <div class="task">
+      <div class="task-node">
+        <span class="task-kicker" data-i18n="taskRefKicker">Reference voice</span>
+        <span class="task-main" data-i18n="taskRefMain">Source dialect speech</span>
+        <span class="task-sub" data-i18n="taskRefSub">keep this speaker</span>
+      </div>
+      <span class="task-op" aria-hidden="true">+</span>
+      <div class="task-node">
+        <span class="task-kicker" data-i18n="taskTextKicker">Target text</span>
+        <span class="task-main" data-i18n="taskTextMain">Different dialect</span>
+        <span class="task-sub" data-i18n="taskTextSub">switch the variety</span>
+      </div>
+      <span class="task-op task-op--arrow" aria-hidden="true">→</span>
+      <div class="task-node task-node--out">
+        <span class="task-kicker" data-i18n="taskOutKicker">Generated speech</span>
+        <span class="task-main" data-i18n="taskOutMain">Target dialect, same voice</span>
+        <span class="task-sub" data-i18n="taskOutSub">7 dialects × 6 systems</span>
+      </div>
+    </div>
+
+    <dl class="stats">
+      <div><dt data-i18n="statDialects">Dialects</dt><dd>07</dd></div>
+      <div><dt data-i18n="statSystems">Systems</dt><dd>06</dd></div>
+      <div><dt data-i18n="statClips">Audio clips</dt><dd>49</dd></div>
+    </dl>
+
+    <p class="hint" data-i18n-html="hintHtml"></p>
+  </section>
+
+  <section id="demo" class="cases" aria-labelledby="demo-heading">
+    <h2 id="demo-heading" class="visually-hidden" data-i18n="demoHeading">Listen to the demos</h2>
+    <noscript><p class="noscript">This demo needs JavaScript to build the audio players.</p></noscript>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-title" data-i18n="footerTitle">Anonymous submission · For review only</p>
+      <p data-i18n="footerData"></p>
+      <p data-i18n="footerNoMetrics"></p>
+      <p data-i18n="footerOffline"></p>
+      <p class="footer-meta" id="footer-meta"></p>
+    </div>
+  </footer>
+</main>
+
+<script src="assets/peaks.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
